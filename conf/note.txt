@@ -1,0 +1,35 @@
+写长度：类型为string，InnerMsg...
+
+optional string ...;//string要写length
+repeated string ...;//每个string都要写length
+
+repeated InnerMsg ...;//每个InnerMsg都要先写length
+
+结论：写length和是否repeated无关，和类型有关，所以何时copy：每个自定义类型都要新建stream
+
+实战，参数序列化>>>>>>>>>>>>>>>>>>>>>>>
++++++++++++++++++++++++++++++++++++++
+Map<Integer,Integer> map:
+
+repeated KeyValPair pair = id;
+message KeyValPair{
+  required int32 key = 1;
+  required int32 val = 2;
+}
+每个pair都是Msg，所以for循环中新建stream
+-------------------------------------
++++++++++++++++++++++++++++++++++++++
+List<Integer> list:
+
+repeated int32 e = id;
+基本类型的List不创建Msg,所以直接写
+-------------------------------------
++++++++++++++++++++++++++++++++++++++
+List<List<Integer>> list:
+
+repeated LMsg lMsg = id;
+message LMsg{
+  repeated int32 e = 1;
+}
+
+-------------------------------------
